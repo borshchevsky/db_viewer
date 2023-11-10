@@ -12,4 +12,5 @@ class DBSerializer(serializers.ModelSerializer):
             'port',
             'username',
             'password',
+            'schema',
         )
