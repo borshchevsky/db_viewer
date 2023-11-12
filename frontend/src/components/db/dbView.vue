@@ -2,7 +2,7 @@
   <div>
     <div class="db" @click="toggleOpened">
       <div>
-        <img src="../assets/db/db.svg" alt="">
+        <img src="../../assets/db/db.svg" alt="">
         {{ name }}
       </div>
     </div>
@@ -36,4 +36,5 @@ const toggleOpened = () => opened.value = !opened.value
 .db:hover {
   cursor: default;
 }
+
 </style>

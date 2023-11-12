@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="db-host-view">
     <div class="host" @click="toggleOpen">
       {{ data.name }}
     </div>
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 
 defineProps(
     {
@@ -29,8 +29,15 @@ const toggleOpen = () => opened.value =!opened.value;
 </script>
 
 <style scoped>
+.db-host-view {
+  margin: 20px
+}
+
 .host:hover {
   cursor: default;
 }
 
+:deep ul {
+  list-style-type: square;
+}
 </style>

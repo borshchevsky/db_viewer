@@ -14,8 +14,22 @@ class DBModelView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         name = data.get('name')
+        host = data.get('host')
+        port = data.get('port')
         if DB.objects.filter(name=name).exists():
-            return Response({'error': 'Database with this name already exists.'}, status.HTTP_409_CONFLICT)
+            return Response(
+                {
+                    'type': 'error',
+                    'message': 'Database with this name already exists.'
+                }, status.HTTP_409_CONFLICT
+            )
+        if DB.objects.filter(host=host, port=port).exists():
+            return Response(
+                {
+                    'type': 'error',
+                    'message': 'Database with this name already exists.'
+                }, status.HTTP_409_CONFLICT
+            )
         data['schema'] = self.serialize_db(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
