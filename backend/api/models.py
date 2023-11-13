@@ -8,3 +8,6 @@ class DB(models.Model):
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     schema = models.JSONField()
+
+    def __str__(self):
+        return self.name

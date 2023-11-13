@@ -26,16 +26,17 @@
 
 <script setup>
 import {inject, ref} from "vue";
+import {toaster} from "@/toaster";
 
 const name = ref('asd')
 const host = ref('localhost')
 const port = ref(5432)
 const username = ref('postgres')
 const password = ref('postgres')
-const addAlert = inject('addAlert')
+const updateServers = inject('updateServers')
 
 const addServer = async () => {
-  const response = await fetch('http://localhost:8000/api/db/',{
+  const response = await fetch('http://localhost:8000/api/db/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -49,7 +50,11 @@ const addServer = async () => {
     })
   })
   const json = await response.json()
-  addAlert(json.message, json.type)
+  toaster.addAlert(json['message'], json['type'])
+
+  if (response.status === 201) {
+    updateServers()
+  }
 }
 </script>
 
@@ -57,9 +62,10 @@ const addServer = async () => {
 .host-form {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 15em;
   justify-content: space-between;
 }
+
 .input-item {
   display: flex;
   flex-direction: row;
