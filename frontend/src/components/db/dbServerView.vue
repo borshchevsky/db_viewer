@@ -1,20 +1,23 @@
 <template>
-  <div class="db-host-view">
-    <div class="host" @click="toggleOpen">
-      {{ data.name }}
+  <div class="db-server-view">
+    <div class="name-container">
+      <button @click="removeServer">Remove</button>
+      <div class="server" @click="toggleOpen">
+        {{ data.type }}
+      </div>
     </div>
     <ul v-for="key in Object.keys(data.schema)" :key="key" v-show="opened">
       <li>
-        <dbView :data=data.schema[key] :name=key />
+        <dbView :data=data.schema[key] :name="key"/>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {inject, ref} from "vue";
 
-defineProps(
+const props = defineProps(
     {
       data: {
         type: Object,
@@ -23,21 +26,36 @@ defineProps(
     }
 )
 
+const updateServers = inject('updateServers')
 const opened = ref(false);
-const toggleOpen = () => opened.value =!opened.value;
-
+const toggleOpen = () => opened.value = !opened.value;
+const removeServer = async () => {
+  await fetch(`http://localhost:8000/api/db/${props.data.id}`, {
+    method: 'DELETE'
+  })
+  updateServers()
+}
 </script>
 
 <style scoped>
-.db-host-view {
+button {
+  margin: 0 5px;
+}
+
+.db-server-view {
   margin: 20px
 }
 
-.host:hover {
+.server:hover {
   cursor: default;
 }
 
 :deep ul {
   list-style-type: square;
+}
+
+.name-container {
+  display: flex;
+  flex-direction: row;
 }
 </style>

@@ -13,23 +13,23 @@ class DBModelView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        name = data.get('name')
         host = data.get('host')
         port = data.get('port')
-        if DB.objects.filter(name=name).exists():
+        type_ = data.get('type')
+        if DB.objects.filter(type=type_).exists():
             return Response(
                 {
                     'type': 'error',
-                    'message': 'Database with this name already exists.'
+                    'message': f'{type_.capitalize()} database already exists.'
                 }, status.HTTP_409_CONFLICT
             )
-        if DB.objects.filter(host=host, port=port).exists():
-            return Response(
-                {
-                    'type': 'error',
-                    'message': 'Database with this name already exists.'
-                }, status.HTTP_409_CONFLICT
-            )
+        # if DB.objects.filter(host=host, port=port).exists():
+        #     return Response(
+        #         {
+        #             'type': 'error',
+        #             'message': 'Database with these host and port already exists.'
+        #         }, status.HTTP_409_CONFLICT
+        #     )
         data['schema'] = self.serialize_db(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -51,7 +51,7 @@ class DBModelView(ModelViewSet):
         username = data['username']
         password = data['password']
         data = {}
-        dsn = f'postgresql://{username}:{password}@{host}:5432'
+        dsn = f'postgresql://{username}:{password}@{host}:{port}'
         engine = create_engine(dsn)
         connection = engine.connect()
         databases = [item[0] for item in connection.execute(text('SELECT datname FROM pg_database')).fetchall() if

@@ -7,7 +7,8 @@ class DBSerializer(serializers.ModelSerializer):
     class Meta:
         model = DB
         fields = (
-            'name',
+            'id',
+            'type',
             'host',
             'port',
             'username',
