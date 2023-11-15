@@ -2,45 +2,50 @@
   <div>
     <div class="container">
       <addDbForm/>
-      <div class="select-container">
-        <div class="select-item">
-          <label for="sourceDbs">Source db</label>
-          <select name="" id="sourceDbs" v-model="selectedSourceDb" @change="fillSourceSchemas">
-            <option v-for="key in sourceDbs" :value="key" :key="key">{{ key }}</option>
-          </select>
+      <div class="mega-container">
+        <div class="select-mega-container">
+          <div class="select-container">
+            <div class="select-item">
+              <label for="sourceDbs">Source db</label>
+              <select name="" id="sourceDbs" v-model="selectedSourceDb" @change="fillSourceSchemas">
+                <option v-for="key in sourceDbs" :value="key" :key="key">{{ key }}</option>
+              </select>
+            </div>
+            <div class="select-item">
+              <label for="sourceSchemas">Source schema</label>
+              <select name="" id="sourceSchemas" v-model="selectedSourceSchema" @change="fillSourceTables">
+                <option v-for="key in sourceSchemas" :value="key" :key="key">{{ key }}</option>
+              </select>
+            </div>
+            <div class="select-item">
+              <label for="sourceTables">Source table</label>
+              <select name="" id="sourceTables" v-model="selectedSourceTable">
+                <option v-for="key in sourceTables" :value="key" :key="key">{{ key }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="select-container">
+            <div class="select-item">
+              <label for="targetDbs">Target db</label>
+              <select name="" id="targetDbs" v-model="selectedTargetDb" @change="fillTargetSchemas">
+                <option v-for="key in targetDbs" :value="key" :key="key">{{ key }}</option>
+              </select>
+            </div>
+            <div class="select-item">
+              <label for="targetSchemas">Target schema</label>
+              <select name="" id="targetSchemas" v-model="selectedTargetSchema" @change="fillTargetTables">
+                <option v-for="key in targetSchemas" :value="key" :key="key">{{ key }}</option>
+              </select>
+            </div>
+            <div class="select-item">
+              <label for="targetTables">Target table</label>
+              <select name="" id="targetTables" v-model="selectedTargetTable">
+                <option v-for="key in targetTables" :value="key" :key="key">{{ key }}</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="select-item">
-          <label for="sourceSchemas">Source schema</label>
-          <select name="" id="sourceSchemas" v-model="selectedSourceSchema" @change="fillSourceTables">
-            <option v-for="key in sourceSchemas" :value="key" :key="key">{{ key }}</option>
-          </select>
-        </div>
-        <div class="select-item">
-          <label for="sourceTables">Source table</label>
-          <select name="" id="sourceTables" v-model="selectedSourceTable">
-            <option v-for="key in sourceTables" :value="key" :key="key">{{ key }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="select-container">
-        <div class="select-item">
-          <label for="targetDbs">Target db</label>
-          <select name="" id="targetDbs" v-model="selectedTargetDb" @change="fillTargetSchemas">
-            <option v-for="key in targetDbs" :value="key" :key="key">{{ key }}</option>
-          </select>
-        </div>
-        <div class="select-item">
-          <label for="targetSchemas">Target schema</label>
-          <select name="" id="targetSchemas" v-model="selectedTargetSchema" @change="fillTargetTables">
-            <option v-for="key in targetSchemas" :value="key" :key="key">{{ key }}</option>
-          </select>
-        </div>
-        <div class="select-item">
-          <label for="targetTables">Target table</label>
-          <select name="" id="targetTables" v-model="selectedTargetTable">
-            <option v-for="key in targetTables" :value="key" :key="key">{{ key }}</option>
-          </select>
-        </div>
+        <uiFieldsBinder/>
       </div>
     </div>
     <div class="server-container">
@@ -52,9 +57,14 @@
 
 <script setup>
 import {onMounted, provide, ref} from "vue";
-import dbServerView from './components/db/dbServerView.vue'
-import addDbForm from './components/ui/addDbForm.vue'
-import uiFieldBinder from './components/ui/uiFieldBinder.vue'
+import dbServerView from '@/components/db/dbServerView.vue'
+import addDbForm from '@/components/ui/addDbForm.vue'
+import uiFieldsBinder from '@/components/ui/uiFieldsBinder.vue'
+import {FieldsStore} from "@/fieldsStore";
+
+const fieldsStore = new FieldsStore()
+
+provide('fieldsStore', fieldsStore)
 
 const sourceServer = ref(null)
 const targetServer = ref(null)
@@ -154,4 +164,13 @@ select {
   justify-content: space-between;
 }
 
+.mega-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-mega-container {
+  display: flex;
+  flex-direction: row;
+}
 </style>

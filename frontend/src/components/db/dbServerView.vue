@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import {inject, ref} from "vue";
+import {provide, inject, ref} from "vue";
 
 const props = defineProps(
     {
@@ -25,6 +25,8 @@ const props = defineProps(
       }
     }
 )
+
+provide('type', props.data.type)
 
 const updateServers = inject('updateServers')
 const expanded = ref(false);

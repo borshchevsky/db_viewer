@@ -1,11 +1,13 @@
 <template>
-  <div class="field">
+  <div class="field" @click="fieldsStore.addField(type, schemaName, tableName, name)">
     {{ name }}: {{ data }}
   </div>
 </template>
 
 <script setup>
-defineProps(
+import {inject} from "vue";
+
+const props = defineProps(
     {
       name: {
         type: String,
@@ -17,6 +19,12 @@ defineProps(
       }
     }
 )
+
+const fieldsStore = inject('fieldsStore')
+const type = inject('type')
+const schemaName = inject('schemaName')
+const tableName = inject('tableName')
+
 </script>
 
 <style scoped>

@@ -12,9 +12,9 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {provide, ref} from "vue";
 
-defineProps(
+const props = defineProps(
     {
       name: {
         type: String,
@@ -26,6 +26,8 @@ defineProps(
       }
     }
 )
+
+provide('schemaName', props.name)
 
 const expanded = ref(false)
 const toggleExpand = () => expanded.value = !expanded.value
