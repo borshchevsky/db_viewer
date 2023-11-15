@@ -3,9 +3,9 @@
   {{ type }}
   <div
       class="field"
-      v-for="field in fieldsStore[type].value"
+      v-for="field in globalStore[type].value"
       :key="field.id"
-      @click="fieldsStore.removeField(field.id)"
+      @click="globalStore.removeField(field.id)"
   >
     {{ field.fieldName }}
   </div>
@@ -15,7 +15,7 @@
 <script setup>
 import {inject} from "vue";
 
-const fieldsStore = inject('fieldsStore');
+const globalStore = inject('globalStore');
 
 defineProps({
   type: {

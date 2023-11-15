@@ -1,5 +1,5 @@
 <template>
-  <div class="field" @click="fieldsStore.addField(type, schemaName, tableName, name)">
+  <div class="field" @click="globalStore.addField(type, schemaName, tableName, name)">
     {{ name }}: {{ data }}
   </div>
 </template>
@@ -20,7 +20,7 @@ const props = defineProps(
     }
 )
 
-const fieldsStore = inject('fieldsStore')
+const globalStore = inject('globalStore')
 const type = inject('type')
 const schemaName = inject('schemaName')
 const tableName = inject('tableName')

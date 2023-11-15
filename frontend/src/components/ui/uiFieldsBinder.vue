@@ -5,13 +5,17 @@
       <uiFieldsColumn type="target"/>
     </div>
   </div>
+  <button @click="process">Process</button>
 </template>
 
 <script setup>
 import {inject} from "vue";
 import uiFieldsColumn from "./uiFieldsColumn.vue"
 
-const fieldsStore = inject('fieldsStore')
+const globalStore = inject('globalStore')
+const process = () => {
+  console.log(JSON.stringify(globalStore.target.value))
+}
 </script>
 
 <style scoped>
@@ -30,5 +34,9 @@ const fieldsStore = inject('fieldsStore')
   justify-content: space-between;
 }
 
+button {
+  width: 70px;
+  margin: 0 10px;
+}
 
 </style>

@@ -3,10 +3,7 @@ import {ref} from "vue";
 const checkIncludes = (obj, arr) => {
     for (let item of arr) {
         for (let [key, value] of Object.entries(obj)) {
-            if (!(key) in item) {
-                break
-            }
-            if (item[key] !== value) {
+            if ((!(key) in item) || (item[key] !== value)) {
                 break
             }
             return true
@@ -15,8 +12,16 @@ const checkIncludes = (obj, arr) => {
     return false
 }
 
-export class FieldsStore {
+export class GlobalStore {
     constructor() {
+        this.sourceServerId = ref(null)
+        this.targetServerId = ref(null)
+        this.sourceDb = ref(null)
+        this.targetDb = ref(null)
+        this.sourceSchema = ref(null)
+        this.targetSchema = ref(null)
+        this.sourceTable = ref(null)
+        this.targetTable = ref(null)
         this.index = -1
         this.source = ref([])
         this.target = ref([])
@@ -32,7 +37,6 @@ export class FieldsStore {
             obj['id'] = ++this.index
             this[type].value.push(obj)
         }
-        console.log(JSON.stringify(this[type]))
     }
 
     removeField(id) {

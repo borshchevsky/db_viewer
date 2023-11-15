@@ -7,39 +7,39 @@
           <div class="select-container">
             <div class="select-item">
               <label for="sourceDbs">Source db</label>
-              <select name="" id="sourceDbs" v-model="selectedSourceDb" @change="fillSourceSchemas">
+              <select name="" id="sourceDbs" v-model="selectedSourceDb" @change="selectSourceDb">
                 <option v-for="key in sourceDbs" :value="key" :key="key">{{ key }}</option>
               </select>
             </div>
             <div class="select-item">
               <label for="sourceSchemas">Source schema</label>
-              <select name="" id="sourceSchemas" v-model="selectedSourceSchema" @change="fillSourceTables">
+              <select name="" id="sourceSchemas" v-model="selectedSourceSchema" @change="selectSourceSchema">
                 <option v-for="key in sourceSchemas" :value="key" :key="key">{{ key }}</option>
               </select>
             </div>
             <div class="select-item">
               <label for="sourceTables">Source table</label>
-              <select name="" id="sourceTables" v-model="selectedSourceTable">
-                <option v-for="key in sourceTables" :value="key" :key="key">{{ key }}</option>
+              <select name="" id="sourceTables" v-model="selectedSourceTable" @change="selectSourceTable">
+                <option v-for="key in sourceTables" :value="key" :key="key" @change="">{{ key }}</option>
               </select>
             </div>
           </div>
           <div class="select-container">
             <div class="select-item">
               <label for="targetDbs">Target db</label>
-              <select name="" id="targetDbs" v-model="selectedTargetDb" @change="fillTargetSchemas">
+              <select name="" id="targetDbs" v-model="selectedTargetDb" @change="selectTargetDb">
                 <option v-for="key in targetDbs" :value="key" :key="key">{{ key }}</option>
               </select>
             </div>
             <div class="select-item">
               <label for="targetSchemas">Target schema</label>
-              <select name="" id="targetSchemas" v-model="selectedTargetSchema" @change="fillTargetTables">
+              <select name="" id="targetSchemas" v-model="selectedTargetSchema" @change="selectTargetSchema">
                 <option v-for="key in targetSchemas" :value="key" :key="key">{{ key }}</option>
               </select>
             </div>
             <div class="select-item">
               <label for="targetTables">Target table</label>
-              <select name="" id="targetTables" v-model="selectedTargetTable">
+              <select name="" id="targetTables" v-model="selectedTargetTable" @change="selectTargetTable">
                 <option v-for="key in targetTables" :value="key" :key="key">{{ key }}</option>
               </select>
             </div>
@@ -60,11 +60,11 @@ import {onMounted, provide, ref} from "vue";
 import dbServerView from '@/components/db/dbServerView.vue'
 import addDbForm from '@/components/ui/addDbForm.vue'
 import uiFieldsBinder from '@/components/ui/uiFieldsBinder.vue'
-import {FieldsStore} from "@/fieldsStore";
+import {GlobalStore} from "@/globalStore";
 
-const fieldsStore = new FieldsStore()
+const globalStore = new GlobalStore()
 
-provide('fieldsStore', fieldsStore)
+provide('globalStore', globalStore)
 
 const sourceServer = ref(null)
 const targetServer = ref(null)
@@ -85,8 +85,12 @@ const updateServers = () => {
   fetch('http://localhost:8000/api/db/')
       .then(response => response.json())
       .then(data => {
-        sourceServer.value = data.filter((el) => el.type === 'source')[0]
-        targetServer.value = data.filter((el) => el.type === 'target')[0]
+        let s = data.filter((el) => el.type === 'source')[0]
+        let t = data.filter((el) => el.type === 'target')[0]
+        sourceServer.value = s
+        targetServer.value = t
+        globalStore.sourceServerId.value = sourceServer.id
+        globalStore.targetServerId.value = targetServer.id
         sourceDbs.value = Object.keys(sourceServer.value.schema)
         targetDbs.value = Object.keys(targetServer.value.schema)
       })
@@ -96,6 +100,10 @@ provide('updateServers', updateServers)
 const selectedSourceDb = ref(null)
 const selectedSourceSchema = ref(null)
 const selectedSourceTable = ref(null)
+const selectedTargetDb = ref(null)
+const selectedTargetSchema = ref(null)
+const selectedTargetTable = ref(null)
+
 const fillSourceSchemas = () => {
   sourceSchemas.value = Object.keys(sourceServer.value.schema[selectedSourceDb.value])
   selectedSourceSchema.value = null
@@ -106,9 +114,6 @@ const fillSourceTables = () => {
   selectedSourceTable.value = null
 }
 
-const selectedTargetDb = ref(null)
-const selectedTargetSchema = ref(null)
-const selectedTargetTable = ref(null)
 const fillTargetSchemas = () => {
   targetSchemas.value = Object.keys(targetServer.value.schema[selectedTargetDb.value])
   selectedTargetSchema.value = null
@@ -119,6 +124,28 @@ const fillTargetTables = () => {
   selectedTargetTable.value = null
 }
 
+const selectSourceDb = () => {
+  fillSourceSchemas()
+  globalStore.sourceDb.value = selectedSourceDb.value
+}
+
+const selectTargetDb = () => {
+  fillTargetSchemas()
+  globalStore.targetDb.value = selectedTargetDb.value
+}
+
+const selectSourceSchema = () => {
+  fillSourceTables()
+  globalStore.sourceSchema.value = selectedSourceSchema.value
+}
+
+const selectTargetSchema = () => {
+  fillTargetTables()
+  globalStore.targetSchema.value = selectedTargetSchema.value
+}
+
+const selectSourceTable = () => globalStore.sourceTable.value = selectedSourceTable.value
+const selectTargetTable = () => globalStore.targetTable.value = selectedTargetTable.value
 
 </script>
 
