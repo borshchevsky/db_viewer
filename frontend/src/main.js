@@ -7,6 +7,7 @@ import dbView from '@/components/db/dbView.vue'
 import dbSchemaView from '@/components/db/dbSchemaView.vue'
 import dbTableView from '@/components/db/dbTableView.vue'
 import dbFieldView from '@/components/db/dbFieldView.vue'
+import uiFieldBinder from './components/ui/uiFieldBinder.vue'
 
 const app = createApp(App)
 app.mount('#app')
@@ -17,3 +18,4 @@ app.component('dbServerView', dbServerView)
     .component('dbTableView', dbTableView)
     .component('dbFieldView', dbFieldView)
     .component('addDbForm', addDbForm)
+    .component('uiFieldBinder', uiFieldBinder)

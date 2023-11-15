@@ -2,11 +2,11 @@
   <div class="db-server-view">
     <div class="name-container">
       <button @click="removeServer">Remove</button>
-      <div class="server" @click="toggleOpen">
+      <div class="server" @click="toggleExpand">
         {{ data.type }}
       </div>
     </div>
-    <ul v-for="key in Object.keys(data.schema)" :key="key" v-show="opened">
+    <ul v-for="key in Object.keys(data.schema)" :key="key" v-show="expanded">
       <li>
         <dbView :data=data.schema[key] :name="key"/>
       </li>
@@ -27,8 +27,8 @@ const props = defineProps(
 )
 
 const updateServers = inject('updateServers')
-const opened = ref(false);
-const toggleOpen = () => opened.value = !opened.value;
+const expanded = ref(false);
+const toggleExpand = () => expanded.value = !expanded.value;
 const removeServer = async () => {
   await fetch(`http://localhost:8000/api/db/${props.data.id}`, {
     method: 'DELETE'

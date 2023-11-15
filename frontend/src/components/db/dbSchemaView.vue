@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="schema" @click="toggleOpen">
+    <div class="schema" @click="toggleExpand">
       {{ name }}
     </div>
-    <ul v-for="key in Object.keys(data)" :key="key" v-show="opened">
+    <ul v-for="key in Object.keys(data)" :key="key" v-show="expanded">
       <li>
         <dbTableView :name="key" :data="data[key]"/>
       </li>
@@ -27,8 +27,8 @@ defineProps(
     }
 )
 
-const opened = ref(false)
-const toggleOpen = () => opened.value = !opened.value
+const expanded = ref(false)
+const toggleExpand = () => expanded.value = !expanded.value
 </script>
 
 <style scoped>

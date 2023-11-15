@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="db" @click="toggleOpened">
+    <div class="db" @click="toggleExpand">
       <div>
         <img src="../../assets/db/db.svg" alt="">
         {{ name }}
       </div>
     </div>
-    <ul v-for="key in Object.keys(data)" :key="key" v-show="opened">
+    <ul v-for="key in Object.keys(data)" :key="key" v-show="expanded">
       <li>
         <dbSchemaView :name="key" :data="data[key]"/>
       </li>
@@ -28,8 +28,8 @@ defineProps({
   }
 })
 
-const opened = ref(false)
-const toggleOpened = () => opened.value = !opened.value
+const expanded = ref(false)
+const toggleExpand = () => expanded.value = !expanded.value
 </script>
 
 <style scoped>
