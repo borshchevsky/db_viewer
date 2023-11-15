@@ -14,7 +14,7 @@ import uiFieldsColumn from "./uiFieldsColumn.vue"
 
 const globalStore = inject('globalStore')
 const process = () => {
-  console.log(JSON.stringify(globalStore.target.value))
+  console.log(JSON.stringify(globalStore))
 }
 </script>
 

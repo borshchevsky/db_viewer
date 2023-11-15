@@ -29,9 +29,9 @@ export class GlobalStore {
 
     addField(type, schemaName, tableName, fieldName) {
         let obj = {
-            fieldName,
+            schemaName,
             tableName,
-            schemaName
+            fieldName,
         }
         if (!checkIncludes(obj, this[type].value)) {
             obj['id'] = ++this.index

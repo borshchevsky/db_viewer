@@ -4,8 +4,8 @@
       <div class="input-item">
         <label for="server_type">Type</label>
         <select name="" id="server_type" v-model="type">
-          <option value="target">target</option>
           <option value="source">source</option>
+          <option value="target">target</option>
         </select>
       </div>
       <div class="input-item">
@@ -33,7 +33,7 @@
 import {inject, ref} from "vue";
 import {toaster} from "@/toaster";
 
-const type = ref('target');
+const type = ref('source');
 const host = ref('localhost')
 const port = ref(5432)
 const username = ref('postgres')

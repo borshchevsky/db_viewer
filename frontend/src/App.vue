@@ -85,14 +85,21 @@ const updateServers = () => {
   fetch('http://localhost:8000/api/db/')
       .then(response => response.json())
       .then(data => {
-        let s = data.filter((el) => el.type === 'source')[0]
-        let t = data.filter((el) => el.type === 'target')[0]
-        sourceServer.value = s
-        targetServer.value = t
-        globalStore.sourceServerId.value = sourceServer.id
-        globalStore.targetServerId.value = targetServer.id
-        sourceDbs.value = Object.keys(sourceServer.value.schema)
-        targetDbs.value = Object.keys(targetServer.value.schema)
+        let source = data.filter((el) => el.type === 'source')[0]
+        let target = data.filter((el) => el.type === 'target')[0]
+          sourceServer.value = source
+          targetServer.value = target
+
+        if (source) {
+          globalStore.sourceServerId.value = sourceServer.value.id
+          sourceDbs.value = Object.keys(sourceServer.value.schema)
+          console.log(sourceServer.value)
+        }
+
+        if (target) {
+          globalStore.targetServerId.value = targetServer.value.id
+          targetDbs.value = Object.keys(targetServer.value.schema)
+        }
       })
 }
 provide('updateServers', updateServers)

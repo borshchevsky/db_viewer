@@ -10,4 +10,4 @@ class DB(models.Model):
     type = models.CharField(max_length=20)
 
     def __str__(self):
-        return f'{self.type.capitalize} DB'
+        return f'{self.type.capitalize()} DB'
