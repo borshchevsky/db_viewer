@@ -2,10 +2,14 @@ import {ref} from "vue";
 
 const checkIncludes = (obj, arr) => {
     for (let item of arr) {
+        let eq = true
         for (let [key, value] of Object.entries(obj)) {
-            if ((!(key) in item) || (item[key] !== value)) {
+            if ((!key in item) || (item[key] !== value)) {
+                eq = false
                 break
             }
+        }
+        if (eq) {
             return true
         }
     }

@@ -93,7 +93,6 @@ const updateServers = () => {
         if (source) {
           globalStore.sourceServerId.value = sourceServer.value.id
           sourceDbs.value = Object.keys(sourceServer.value.schema)
-          console.log(sourceServer.value)
         }
 
         if (target) {

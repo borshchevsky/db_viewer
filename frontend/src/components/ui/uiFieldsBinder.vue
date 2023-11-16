@@ -11,10 +11,16 @@
 <script setup>
 import {inject} from "vue";
 import uiFieldsColumn from "./uiFieldsColumn.vue"
+import {toaster} from "@/toaster";
 
 const globalStore = inject('globalStore')
 const process = () => {
-  console.log(JSON.stringify(globalStore))
+  let sourceFields = globalStore.source.value
+  let targetFields = globalStore.target.value
+  // if (sourceFields.length !== targetFields.length) {
+  //   toaster.addAlert('Number of source and target fields must be equal')
+  // }
+  let sourceSql = sourceFields.join('')
 }
 </script>
 
