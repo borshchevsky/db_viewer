@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, inspect, text
 
 from api.models import DB
 from api.serializers import DBSerializer
-from api.utils import get_data, load_data
+from api.utils import get_data, load_data, process
 
 
 class DBModelView(ModelViewSet):
@@ -22,16 +22,16 @@ class DBModelView(ModelViewSet):
             return Response(
                 {
                     'type': 'error',
-                    'message': f'{type_.capitalize()} database already exists.'
+                    'message': f'{type_.capitalize()} server already exists.'
                 }, status.HTTP_409_CONFLICT
             )
-        # if DB.objects.filter(host=host, port=port).exists():
-        #     return Response(
-        #         {
-        #             'type': 'error',
-        #             'message': 'Database with these host and port already exists.'
-        #         }, status.HTTP_409_CONFLICT
-        #     )
+        if DB.objects.filter(host=host, port=port).exists():
+            return Response(
+                {
+                    'type': 'error',
+                    'message': 'Server with these host and port already exists.'
+                }, status.HTTP_409_CONFLICT
+            )
         data['schema'] = self.serialize_db(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -50,24 +50,13 @@ class DBModelView(ModelViewSet):
     def process(self, request):
         source_dsn = DB.objects.filter(type='source').first().dsn
         target_dsn = DB.objects.filter(type='target').first().dsn
-        data = get_data(request.data, source_dsn)
-        load_data(request.data, data, target_dsn)
+        count = process(request.data, source_dsn, target_dsn)
         return Response(
             {
                 'type': 'success',
-                'message': 'Success'
+                'message': f'{count} items loaded'
             }
         )
-        # sql_query = request.data.get('sql')
-        # type_ = request.data.get('type')
-        # dsn = DB.objects.filter(type=type_).first().dsn
-        # engine = create_engine(dsn)
-        # connection = engine.connect()
-        # return Response(
-        #     [
-        #         item._asdict() for item in connection.execute(text(sql_query)).fetchall()
-        #     ]
-        # )
 
     @staticmethod
     def serialize_db(data):

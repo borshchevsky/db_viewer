@@ -3,6 +3,11 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
+def process(mapping, source_dsn, target_dsn):
+    data = get_data(mapping, source_dsn)
+    return load_data(mapping, data, target_dsn)
+
+
 def get_data(mapping, dsn):
     engine = create_engine(dsn)
     connection = engine.connect()
@@ -21,46 +26,6 @@ def load_data(mapping, data, dsn):
     base = automap_base(metadata=metadata)
     base.prepare()
     tables = base.classes
-
-    objects = [
-        {
-            **item
-        } for item in data
-    ]
-
-    session.execute(insert(getattr(tables, mapping['targetTable'])), objects)
+    session.execute(insert(getattr(tables, mapping['targetTable'])), data)
     session.commit()
-
-    return objects
-
-
-j = {
-    "sourceServerId": 5,
-    "targetServerId": 6,
-    "sourceDb": "postgres",
-    "targetDb": "postgres",
-    "sourceSchema": "public",
-    "targetSchema": "public",
-    "sourceTable": "source_table",
-    "targetTable": "target_table",
-    "source": [
-        {
-            "schemaName": "public",
-            "tableName": "source_table",
-            "fieldName": "source_column",
-            "id": 0
-        }
-    ],
-    "target": [
-        {
-            "schemaName": "public",
-            "tableName": "target_table",
-            "fieldName": "target_column",
-            "id": 1
-        }
-    ]
-}
-
-if __name__ == '__main__':
-    data = get_data(j, 'postgresql://postgres:postgres@localhost:5432')
-    print(load_data(j, data))
+    return len(data)
