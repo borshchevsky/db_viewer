@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, inspect, text
 
 from api.models import DB
 from api.serializers import DBSerializer
+from api.utils import get_data, load_data
 
 
 class DBModelView(ModelViewSet):
@@ -47,7 +48,16 @@ class DBModelView(ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def process(self, request):
-        return Response(request.data)
+        source_dsn = DB.objects.filter(type='source').first().dsn
+        target_dsn = DB.objects.filter(type='target').first().dsn
+        data = get_data(request.data, source_dsn)
+        load_data(request.data, data, target_dsn)
+        return Response(
+            {
+                'type': 'success',
+                'message': 'Success'
+            }
+        )
         # sql_query = request.data.get('sql')
         # type_ = request.data.get('type')
         # dsn = DB.objects.filter(type=type_).first().dsn
