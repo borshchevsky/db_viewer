@@ -47,4 +47,12 @@ export class GlobalStore {
         this.source.value = this.source.value.filter((el) => el.id !== id)
         this.target.value = this.target.value.filter((el) => el.id !== id)
     }
+
+    json() {
+        let out = {}
+        for (let key in this) {
+            out[key] = this[key].value
+        }
+        return out
+    }
 }

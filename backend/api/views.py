@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from sqlalchemy import create_engine, inspect, text
@@ -43,6 +44,20 @@ class DBModelView(ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+    @action(detail=False, methods=['post'])
+    def process(self, request):
+        return Response(request.data)
+        # sql_query = request.data.get('sql')
+        # type_ = request.data.get('type')
+        # dsn = DB.objects.filter(type=type_).first().dsn
+        # engine = create_engine(dsn)
+        # connection = engine.connect()
+        # return Response(
+        #     [
+        #         item._asdict() for item in connection.execute(text(sql_query)).fetchall()
+        #     ]
+        # )
 
     @staticmethod
     def serialize_db(data):
