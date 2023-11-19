@@ -16,6 +16,7 @@
 
 <script setup>
 import {provide, inject, ref} from "vue";
+import {confModal} from "@/confirmModal";
 
 const props = defineProps(
     {
@@ -31,11 +32,13 @@ provide('type', props.data.type)
 const updateServers = inject('updateServers')
 const expanded = ref(false);
 const toggleExpand = () => expanded.value = !expanded.value;
-const removeServer = async () => {
-  await fetch(`http://localhost:8000/api/db/${props.data.id}`, {
-    method: 'DELETE'
-  })
-  updateServers()
+const removeServer = () => {
+  (confModal.open('Are you sure you want to remove the server?'))
+
+  // await fetch(`http://localhost:8000/api/db/${props.data.id}`, {
+  //   method: 'DELETE'
+  // })
+  // updateServers()
 }
 </script>
 

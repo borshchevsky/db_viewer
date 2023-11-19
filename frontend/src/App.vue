@@ -68,14 +68,16 @@ provide('globalStore', globalStore)
 
 const sourceServer = ref(null)
 const targetServer = ref(null)
-const messages = ref([])
-const index = ref(-1)
 const sourceDbs = ref(null)
 const sourceSchemas = ref(null)
 const sourceTables = ref(null)
 const targetDbs = ref(null)
 const targetSchemas = ref(null)
 const targetTables = ref(null)
+const dialogIsOpened = ref(true)
+const toggleDialog = () => {
+  dialogIsOpened.value = false
+}
 
 onMounted(async () => {
   updateServers()
