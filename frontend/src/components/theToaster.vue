@@ -15,11 +15,26 @@ import {ref} from "vue";
 const index = ref(-1)
 const messages = ref([])
 
-const addAlert = (message, type) => {
+const addAlert = async (response) => {
+  let msg
+  let type
+
+  if (response.status >= 200 && response.status < 300) {
+    msg = 'Success'
+    type = 'success'
+  } else {
+    msg = 'Error'
+    type = 'error'
+  }
+
+  try {
+    msg = await response.json()
+  } catch {}
+
   messages.value.push({
     id: ++index.value,
-    message,
-    type
+    message: msg,
+    type: type
   })
   let i = index.value
   setTimeout(() => messages.value = messages.value.filter((el) => el.id !== i), 3000)

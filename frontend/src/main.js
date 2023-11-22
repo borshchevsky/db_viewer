@@ -9,6 +9,7 @@ import dbTableView from '@/components/db/dbTableView.vue'
 import dbFieldView from '@/components/db/dbFieldView.vue'
 import uiFieldBinder from './components/ui/uiFieldsBinder.vue'
 import uiFieldsColumn from "./components/ui/uiFieldsColumn.vue"
+import confirmModal from "./components/confirmModal.vue"
 
 const app = createApp(App)
 app.mount('#app')
@@ -21,3 +22,4 @@ app.component('dbServerView', dbServerView)
     .component('addDbForm', addDbForm)
     .component('uiFieldBinder', uiFieldBinder)
     .component('uiFieldsColumn', uiFieldsColumn)
+    .component('confirmModal', confirmModal)

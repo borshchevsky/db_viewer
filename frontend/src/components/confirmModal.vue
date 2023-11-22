@@ -1,32 +1,26 @@
 <template>
-  <div class="modal" v-if="show">
-    <div class="modal-content">
-      {{ currentText }}
-      <button @click="close(true)">Yes</button>
-      <button @click="close(false)">No</button>
+  <div class="modal" @click="close(false)">
+    <div class="modal-inner" @click.stop>
+      <div class="modal-content">
+        {{ text }}
+        <button @click="close(true)">Yes</button>
+        <button @click="close(false)">No</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+const emits = defineEmits(['confirm'])
 
-const currentText = ref('dgdfgdfg')
-const show = ref(false)
-const returnedValue = ref(1)
-const open = (text) => {
-  returnedValue.value = null
-  currentText.value = text
-  show.value = true
-}
 const close = (value) => {
-  returnedValue.value = value
-  show.value = false
+  emits('confirm', value)
 }
-
-defineExpose({
-  open: open,
-  returnedValue: returnedValue,
+const props = defineProps({
+  text: {
+    type: String,
+    default: ''
+  }
 })
 </script>
 
@@ -41,11 +35,31 @@ defineExpose({
   display: flex;
 }
 
-.modal-content {
+.modal-inner {
   margin: auto;
   background: white;
-  border-radius: 12px;
-  min-height: 50px;
-  min-width: 300px;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.modal-content {
+  margin: auto;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  width: 100px;
+}
+
+button:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateY(1px);
+}
+
+button:active {
+  transform: translateY(6px);
 }
 </style>

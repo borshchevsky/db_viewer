@@ -54,8 +54,8 @@ const addServer = async () => {
       password: password.value
     })
   })
-  const json = await response.json()
-  toaster.addAlert(json['message'], json['type'])
+
+  toaster.addAlert(response)
 
   if (response.status === 201) {
     updateServers()

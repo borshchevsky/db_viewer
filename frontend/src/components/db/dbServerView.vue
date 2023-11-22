@@ -1,7 +1,12 @@
 <template>
+  <confirmModal
+      @confirm="handleRemove"
+      :text="`Remove ${data.type} server?`"
+      v-if="showModal"
+  />
   <div class="db-server-view">
     <div class="name-container">
-      <button @click="removeServer">Remove</button>
+      <button @click="toggleShowModal">Remove</button>
       <div class="server" @click="toggleExpand">
         {{ data.type }}
       </div>
@@ -16,7 +21,14 @@
 
 <script setup>
 import {provide, inject, ref} from "vue";
-import {confModal} from "@/confirmModal";
+import confirmModal from "@/components/confirmModal.vue";
+import {toaster} from "@/toaster";
+
+const showModal = ref(false);
+
+const toggleShowModal = (value) => {
+  showModal.value = !showModal.value
+}
 
 const props = defineProps(
     {
@@ -32,13 +44,19 @@ provide('type', props.data.type)
 const updateServers = inject('updateServers')
 const expanded = ref(false);
 const toggleExpand = () => expanded.value = !expanded.value;
-const removeServer = () => {
-  (confModal.open('Are you sure you want to remove the server?'))
+const handleRemove = (value) => {
+  toggleShowModal()
+  if (value) {
+    removeServer()
+  }
+}
 
-  // await fetch(`http://localhost:8000/api/db/${props.data.id}`, {
-  //   method: 'DELETE'
-  // })
-  // updateServers()
+const removeServer = async () => {
+  const response = await fetch(`http://localhost:8000/api/db/${props.data.id}`, {
+    method: 'DELETE'
+  })
+  updateServers()
+  toaster.addAlert(response)
 }
 </script>
 

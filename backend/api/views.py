@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, inspect, text
 
 from api.models import DB
 from api.serializers import DBSerializer
-from api.utils import get_data, load_data, process
+from api.utils import process
 
 
 class DBModelView(ModelViewSet):
@@ -19,44 +19,22 @@ class DBModelView(ModelViewSet):
         port = data.get('port')
         type_ = data.get('type')
         if DB.objects.filter(type=type_).exists():
-            return Response(
-                {
-                    'type': 'error',
-                    'message': f'{type_.capitalize()} server already exists.'
-                }, status.HTTP_409_CONFLICT
-            )
+            return Response(f'{type_.capitalize()} server already exists.', status.HTTP_409_CONFLICT)
         if DB.objects.filter(host=host, port=port).exists():
-            return Response(
-                {
-                    'type': 'error',
-                    'message': 'Server with these host and port already exists.'
-                }, status.HTTP_409_CONFLICT
-            )
+            return Response('Server with these host and port already exists.', status.HTTP_409_CONFLICT)
         data['schema'] = self.serialize_db(data)
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(
-            {
-                'type': 'success',
-                'message': 'Server has successfully been added.'
-            },
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
+        return Response('Server has successfully been added.', status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'])
     def process(self, request):
         source_dsn = DB.objects.filter(type='source').first().dsn
         target_dsn = DB.objects.filter(type='target').first().dsn
         count = process(request.data, source_dsn, target_dsn)
-        return Response(
-            {
-                'type': 'success',
-                'message': f'{count} items loaded'
-            }
-        )
+        return Response(f'{count} items loaded')
 
     @staticmethod
     def serialize_db(data):
